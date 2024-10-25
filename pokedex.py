@@ -27,25 +27,26 @@ def main():
 
     # poids de tous les pokemons sous forme d'une liste contenant des dictionnaires : 
     weightPokemonList = getWeight(pokemons)
-    # print("⏺", weightPokemonList)
-    # print("\n -------------------------------------- \n")
+    print("⏺", weightPokemonList)
+    print("\n -------------------------------------- \n")
 
     # liste nettoyée : suppression de "kg" et typage de la valeur en float:
     cleanedWeightPokemonList = getCleanedWeigthList(weightPokemonList)
-    # print("♻️", cleanedWeightPokemonList)
-    # print("\n -------------------------------------- \n")
+    print("♻️", cleanedWeightPokemonList)
+    print("\n -------------------------------------- \n")
 
-    # liste contenant uniquement les pokemons de plus de 10kg
+    # # liste contenant uniquement les pokemons de plus de 10kg
     heavyPokemonList = getHeavyPokemon(cleanedWeightPokemonList)
     print("⭕️", heavyPokemonList)
     print("\n -------------------------------------- \n")
 
     # liste ordonnée par poids :
-    # orderheavypokemon = getByWeightOrderPokemon(heavyPokemonList)
-    # print("✅", orderheavypokemon)
-    # print("\n -------------------------------------- \n")
+    orderheavypokemon = getByWeightOrderPokemon(heavyPokemonList)
+    print("✅", orderheavypokemon)
+    print("\n -------------------------------------- \n")
 
-    getByWeightOrderPokemon(heavyPokemonList)
+    # getByWeightOrderPokemon(heavyPokemonList)
+
 #  ------------------------------------------------ FUNCTIONS ---------------------------------------------------
 
 # creating a function to get a simple list of pokemons dictionaries: 
@@ -59,7 +60,6 @@ def getListOfPokemons(pokemonList):
 # looping on pokemonList nested in big list to get the dictionaries nested in the list:
     for list in pokemonList:
         for items in list:
-            # print(f'ITEMS: {items}')
             return items
 
  # nombre de pokemons dans la liste:
@@ -74,45 +74,47 @@ def getWeight(list):
         for key, value in dictionaries.items():
             if key == "weight":
                 print(dictionaries['name'], value)       
-                dict.update({dictionaries['name'] : value})
+                dict.update({"name" : dictionaries['name'], "weight" : value})
                 weightList.append(dict)
     return weightList            
 
-# obtenir uniquement les pokemons dont le poids est supérieur à 10kg : 
+# liste nettoyée avec un typage float pour la value et suppression de "kg":
 def getCleanedWeigthList(list):
+    newList = []
     for dictionaries in list:
         for key, value in dictionaries.items():
             if "kg" in value:
-                # print(value)
                 newValue = value.replace("kg", "")
-                # print(f'new value: {newValue}')
                 dictionaries.update({key : float(newValue)})
-    return list    
+                newList.append(dictionaries)
+    return newList    
 
+
+# obtenir uniquement les pokemons dont le poids est supérieur à 10kg : 
 def getHeavyPokemon(list):
     newList = []
 
     for dictionaries in list:
         for key, value in dictionaries.items():
-            if value >= 10.0:
-                # print(value)
+            if key == "weight" and value >= 10.0:
                 newList.append(dictionaries)           
     return newList
 
 
 # classer par ordre croissant de poids:
 def getByWeightOrderPokemon(list):
-    newList = []
+    newList = list
 
-    for dictionaries in list:
-        for key, value in dictionaries.items():
-            print(value)
-            for nextKey, nextValue in dictionaries.items():
-                print(nextValue)
-                # if value < nextValue:
-                #     print(f'value: {value} / nextvalue: {nextValue}')
-    #                 newList.append(dictionaries)
-    # return newList
+    # using index in the list to compare dictionary at index with dictionary at index + 1: 
+    for i in range(len(list)):
+            for j in range(i + 1, len(list)):
+                if newList[i]['weight'] > newList[j]['weight']:
+                    newList[i], newList[j] = newList[j], newList[i]
+
+    # autre manière avec méthode sorted() et paramètre key pour itérer sur une liste complexe contenant des dictionnaires
+    # key=lambda est une fonction anonyme permettant d'indiquer qu'est-ce qu'on veut trier spécifiquement
+    # newList = sorted(list, key=lambda dictionary: dictionary['weight'])             
+    return newList
    
 
 main()
